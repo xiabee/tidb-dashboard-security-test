@@ -1,4 +1,4 @@
-// Copyright 2023 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
 
 package statement
 
@@ -141,12 +141,13 @@ func (s *Service) stmtTypesHandler(c *gin.Context) {
 }
 
 type GetStatementsRequest struct {
-	Schemas   []string `json:"schemas" form:"schemas"`
-	StmtTypes []string `json:"stmt_types" form:"stmt_types"`
-	BeginTime int      `json:"begin_time" form:"begin_time"`
-	EndTime   int      `json:"end_time" form:"end_time"`
-	Text      string   `json:"text" form:"text"`
-	Fields    string   `json:"fields" form:"fields"`
+	Schemas        []string `json:"schemas" form:"schemas"`
+	ResourceGroups []string `json:"resource_groups" form:"resource_groups"`
+	StmtTypes      []string `json:"stmt_types" form:"stmt_types"`
+	BeginTime      int      `json:"begin_time" form:"begin_time"`
+	EndTime        int      `json:"end_time" form:"end_time"`
+	Text           string   `json:"text" form:"text"`
+	Fields         string   `json:"fields" form:"fields"`
 }
 
 // @Summary Get a list of statements
@@ -171,6 +172,7 @@ func (s *Service) listHandler(c *gin.Context) {
 		db,
 		req.BeginTime, req.EndTime,
 		req.Schemas,
+		req.ResourceGroups,
 		req.StmtTypes,
 		req.Text,
 		fields)
@@ -235,13 +237,15 @@ func (s *Service) planDetailHandler(c *gin.Context) {
 
 	if result.AggBinaryPlan != "" {
 		// may failed but it's ok
-		result.BinaryPlanText, _ = utils.GenerateBinaryPlanText(db, result.AggBinaryPlan)
+		result.BinaryPlanText, err = utils.GenerateBinaryPlanText(db, result.AggBinaryPlan)
 		// may failed but it's ok
 		result.BinaryPlanJSON, _ = utils.GenerateBinaryPlanJSON(result.AggBinaryPlan)
 
-		// reduce response size
-		result.AggBinaryPlan = ""
-		result.AggPlan = ""
+		if err == nil {
+			// reduce response size
+			result.AggBinaryPlan = ""
+			result.AggPlan = ""
+		}
 	}
 
 	c.JSON(http.StatusOK, result)
@@ -360,6 +364,7 @@ func (s *Service) downloadTokenHandler(c *gin.Context) {
 		db,
 		req.BeginTime, req.EndTime,
 		req.Schemas,
+		req.ResourceGroups,
 		req.StmtTypes,
 		req.Text,
 		fields)

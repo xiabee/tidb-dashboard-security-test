@@ -1,4 +1,4 @@
-// Copyright 2023 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
 
 package topology
 
@@ -19,8 +19,7 @@ import (
 
 // TODO: refactor this with topology prefix since it is compatible with other components.
 const (
-	ticdcTopologyKeyPrefix = "/tidb/cdc/"
-	ticdcCaptureKeyIdent   = "__cdc_meta__/capture/"
+	ticdcTopologyKeyPrefix = "/topology/ticdc/"
 )
 
 func FetchTiCDCTopology(ctx context.Context, etcdClient *clientv3.Client) ([]TiCDCInfo, error) {
@@ -35,7 +34,7 @@ func FetchTiCDCTopology(ctx context.Context, etcdClient *clientv3.Client) ([]TiC
 	nodes := make([]TiCDCInfo, 0)
 	for _, kv := range resp.Kvs {
 		key := string(kv.Key)
-		if !strings.HasPrefix(key, ticdcTopologyKeyPrefix) || !strings.Contains(key, ticdcCaptureKeyIdent) {
+		if !strings.HasPrefix(key, ticdcTopologyKeyPrefix) {
 			continue
 		}
 
@@ -70,9 +69,12 @@ func FetchTiCDCTopology(ctx context.Context, etcdClient *clientv3.Client) ([]TiC
 
 func parseTiCDCInfo(clusterName string, value []byte) (*TiCDCInfo, error) {
 	ds := struct {
-		ID      string `json:"id"`
-		Address string `json:"address"`
-		Version string `json:"version"`
+		ID             string `json:"id"`
+		Address        string `json:"address"`
+		Version        string `json:"version"`
+		GitHash        string `json:"git-hash"`
+		DeployPath     string `json:"deploy-path"`
+		StartTimestamp int64  `json:"start-timestamp"`
 	}{}
 
 	err := json.Unmarshal(value, &ds)
@@ -85,11 +87,14 @@ func parseTiCDCInfo(clusterName string, value []byte) (*TiCDCInfo, error) {
 	}
 
 	return &TiCDCInfo{
-		ClusterName: clusterName,
-		Version:     ds.Version,
-		IP:          hostname,
-		Port:        port,
-		Status:      ComponentStatusUp,
-		StatusPort:  port,
+		ClusterName:    clusterName,
+		GitHash:        ds.GitHash,
+		Version:        ds.Version,
+		IP:             hostname,
+		Port:           port,
+		DeployPath:     ds.DeployPath,
+		Status:         ComponentStatusUp,
+		StatusPort:     port,
+		StartTimestamp: ds.StartTimestamp,
 	}, nil
 }

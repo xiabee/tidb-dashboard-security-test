@@ -1,4 +1,4 @@
-// Copyright 2023 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
 
 package metrics
 
@@ -140,6 +140,10 @@ func (s *Service) putCustomPromAddress(c *gin.Context) {
 	var req PutCustomPromAddressRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		rest.Error(c, rest.ErrBadRequest.NewWithNoMessage())
+		return
+	}
+	if s.params.Config.DisableCustomPromAddr && req.Addr != "" {
+		rest.Error(c, rest.ErrForbidden.New("custom prometheus address has been disabled"))
 		return
 	}
 	addr, err := s.setCustomPromAddress(req.Addr)

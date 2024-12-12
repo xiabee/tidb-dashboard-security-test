@@ -96,6 +96,11 @@ export const derivedFields = {
   avg_rocksdb_block_read_byte: genDerivedBarSources(
     'avg_rocksdb_block_read_byte',
     'max_rocksdb_block_read_byte'
+  ),
+  avg_ru: genDerivedBarSources('avg_ru', 'max_ru'),
+  avg_time_queued_by_rc: genDerivedBarSources(
+    'avg_time_queued_by_rc',
+    'max_time_queued_by_rc'
   )
 }
 
@@ -172,7 +177,6 @@ export function statementColumns(
   showFullSQL?: boolean
 ): IColumn[] {
   const tcf = new TableColumnFactory(TRANS_KEY_PREFIX, tableSchemaColumns)
-
   return tcf.columns([
     evictedRenderColumn(
       tcf.sqlText('digest_text', showFullSQL, rows).getConfig()
@@ -274,7 +278,16 @@ export function statementColumns(
         minWidth: 220,
         maxWidth: 250
       }
-    )
+    ),
+    //resource control
+    tcf.textWithTooltip('resource_group', rows),
+    avgMaxColumn(tcf, 'avg_ru', 'none', rows),
+    tcf.textWithTooltip('sum_ru', rows).patchConfig({
+      minWidth: 100,
+      maxWidth: 300,
+      columnActionsMode: ColumnActionsMode.clickable
+    }),
+    avgMaxColumn(tcf, 'avg_time_queued_by_rc', 'ns', rows)
   ])
 }
 

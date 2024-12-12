@@ -10,6 +10,8 @@ import { PromDataSuccessResponse } from '@lib/utils'
 export interface ISlowQueryDataSource {
   infoListDatabases(options?: ReqConfig): AxiosPromise<Array<string>>
 
+  infoListResourceGroupNames(options?: ReqConfig): AxiosPromise<Array<string>>
+
   slowQueryAvailableFieldsGet(options?: ReqConfig): AxiosPromise<Array<string>>
 
   slowQueryListGet(
@@ -22,6 +24,7 @@ export interface ISlowQueryDataSource {
     limit?: number,
     orderBy?: string,
     plans?: Array<string>,
+    resourceGroup?: Array<string>,
     text?: string,
     options?: ReqConfig
   ): AxiosPromise<Array<SlowqueryModel>>
@@ -61,6 +64,8 @@ export interface ISlowQueryEvent {
 export interface ISlowQueryConfig extends IContextConfig {
   enableExport: boolean
   showDBFilter: boolean
+  showResourceGroupFilter: boolean
+  showDigestFilter: boolean
   showHelp?: boolean
 
   // true means the list api will return all fields value of an item, not just the selected fields

@@ -8,7 +8,9 @@ import {
   TopologyGrafanaInfo,
   TopologyAlertManagerInfo,
   ClusterinfoStoreTopologyResponse,
-  MetricsQueryResponse
+  MetricsQueryResponse,
+  TopologyTiCDCInfo,
+  TopologyTiProxyInfo
 } from '@lib/client'
 
 import { IContextConfig, ReqConfig } from '@lib/types'
@@ -39,6 +41,12 @@ export interface IOverviewDataSource {
 
   getPDTopology(options?: ReqConfig): AxiosPromise<Array<TopologyPDInfo>>
 
+  getTiCDCTopology(options?: ReqConfig): AxiosPromise<Array<TopologyTiCDCInfo>>
+
+  getTiProxyTopology(
+    options?: ReqConfig
+  ): AxiosPromise<Array<TopologyTiProxyInfo>>
+
   getGrafanaTopology(options?: ReqConfig): AxiosPromise<TopologyGrafanaInfo>
 
   getAlertManagerTopology(
@@ -60,7 +68,7 @@ export interface IOverviewDataSource {
 
 export type IOverviewConfig = IContextConfig &
   IMetricConfig & {
-    showViewMoreMetrics: boolean
+    showMetrics: boolean
   }
 
 export interface IOverviewContext {

@@ -20,6 +20,14 @@ class DataSource implements IOverviewDataSource {
     return client.getInstance().getPDTopology(options)
   }
 
+  getTiCDCTopology(options?: ReqConfig) {
+    return client.getInstance().getTiCDCTopology(options)
+  }
+
+  getTiProxyTopology(options?: ReqConfig) {
+    return client.getInstance().getTiProxyTopology(options)
+  }
+
   metricsQueryGet(params: {
     endTimeSec?: number
     query?: string
@@ -55,7 +63,7 @@ export const ctx: IOverviewContext = {
     apiPathBase: client.getBasePath(),
     metricsQueries: overviewMetrics,
     promAddrConfigurable: true,
-    showViewMoreMetrics: true,
+    showMetrics: true,
     metricsReferenceLink:
       'https://docs.pingcap.com/tidb/stable/dashboard-monitoring'
   }

@@ -137,7 +137,11 @@ import { TopologyPDInfo } from '../models';
 // @ts-ignore
 import { TopologyStoreLocation } from '../models';
 // @ts-ignore
+import { TopologyTiCDCInfo } from '../models';
+// @ts-ignore
 import { TopologyTiDBInfo } from '../models';
+// @ts-ignore
+import { TopologyTiProxyInfo } from '../models';
 // @ts-ignore
 import { TopsqlEditableConfig } from '../models';
 // @ts-ignore
@@ -1555,12 +1559,78 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary Get all TiCDC instances
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTiCDCTopology: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/topology/ticdc`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JwtAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get all TiDB instances
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         getTiDBTopology: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/topology/tidb`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JwtAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get all TiProxy instances
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTiProxyTopology: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/topology/tiproxy`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2571,6 +2641,39 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
+         * 
+         * @summary List all resource groups
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        resourceManagerInformationGroupNamesGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/resource_manager/information/group_names`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JwtAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Get available field names by slowquery table columns
          * @summary Get available field names
          * @param {*} [options] Override http request option.
@@ -2739,11 +2842,12 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * @param {number} [limit] 
          * @param {string} [orderBy] 
          * @param {Array<string>} [plans] for showing slow queries in the statement detail page
+         * @param {Array<string>} [resourceGroup] 
          * @param {string} [text] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        slowQueryListGet: async (beginTime?: number, db?: Array<string>, desc?: boolean, digest?: string, endTime?: number, fields?: string, limit?: number, orderBy?: string, plans?: Array<string>, text?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        slowQueryListGet: async (beginTime?: number, db?: Array<string>, desc?: boolean, digest?: string, endTime?: number, fields?: string, limit?: number, orderBy?: string, plans?: Array<string>, resourceGroup?: Array<string>, text?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/slow_query/list`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2793,6 +2897,10 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
 
             if (plans) {
                 localVarQueryParameter['plans'] = plans;
+            }
+
+            if (resourceGroup) {
+                localVarQueryParameter['resource_group'] = resourceGroup;
             }
 
             if (text !== undefined) {
@@ -3036,13 +3144,14 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * @param {number} [beginTime] 
          * @param {number} [endTime] 
          * @param {string} [fields] 
+         * @param {Array<string>} [resourceGroups] 
          * @param {Array<string>} [schemas] 
          * @param {Array<string>} [stmtTypes] 
          * @param {string} [text] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        statementsListGet: async (beginTime?: number, endTime?: number, fields?: string, schemas?: Array<string>, stmtTypes?: Array<string>, text?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        statementsListGet: async (beginTime?: number, endTime?: number, fields?: string, resourceGroups?: Array<string>, schemas?: Array<string>, stmtTypes?: Array<string>, text?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/statements/list`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3068,6 +3177,10 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
 
             if (fields !== undefined) {
                 localVarQueryParameter['fields'] = fields;
+            }
+
+            if (resourceGroups) {
+                localVarQueryParameter['resource_groups'] = resourceGroups;
             }
 
             if (schemas) {
@@ -3684,6 +3797,39 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(message, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Reset encryption key to revoke all authorized codes
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        userRevokeSession: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/user/share/revoke`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication JwtAuth required
+            await setApiKeyToObject(localVarHeaderParameter, "Authorization", configuration)
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -4378,12 +4524,32 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get all TiCDC instances
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getTiCDCTopology(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TopologyTiCDCInfo>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getTiCDCTopology(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Get all TiDB instances
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         async getTiDBTopology(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TopologyTiDBInfo>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getTiDBTopology(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Get all TiProxy instances
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getTiProxyTopology(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TopologyTiProxyInfo>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getTiProxyTopology(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -4672,6 +4838,16 @@ export const DefaultApiFp = function(configuration?: Configuration) {
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
+         * 
+         * @summary List all resource groups
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async resourceManagerInformationGroupNamesGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.resourceManagerInformationGroupNamesGet(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
          * Get available field names by slowquery table columns
          * @summary Get available field names
          * @param {*} [options] Override http request option.
@@ -4728,12 +4904,13 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {number} [limit] 
          * @param {string} [orderBy] 
          * @param {Array<string>} [plans] for showing slow queries in the statement detail page
+         * @param {Array<string>} [resourceGroup] 
          * @param {string} [text] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async slowQueryListGet(beginTime?: number, db?: Array<string>, desc?: boolean, digest?: string, endTime?: number, fields?: string, limit?: number, orderBy?: string, plans?: Array<string>, text?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SlowqueryModel>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.slowQueryListGet(beginTime, db, desc, digest, endTime, fields, limit, orderBy, plans, text, options);
+        async slowQueryListGet(beginTime?: number, db?: Array<string>, desc?: boolean, digest?: string, endTime?: number, fields?: string, limit?: number, orderBy?: string, plans?: Array<string>, resourceGroup?: Array<string>, text?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<SlowqueryModel>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.slowQueryListGet(beginTime, db, desc, digest, endTime, fields, limit, orderBy, plans, resourceGroup, text, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -4806,14 +4983,15 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {number} [beginTime] 
          * @param {number} [endTime] 
          * @param {string} [fields] 
+         * @param {Array<string>} [resourceGroups] 
          * @param {Array<string>} [schemas] 
          * @param {Array<string>} [stmtTypes] 
          * @param {string} [text] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async statementsListGet(beginTime?: number, endTime?: number, fields?: string, schemas?: Array<string>, stmtTypes?: Array<string>, text?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<StatementModel>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.statementsListGet(beginTime, endTime, fields, schemas, stmtTypes, text, options);
+        async statementsListGet(beginTime?: number, endTime?: number, fields?: string, resourceGroups?: Array<string>, schemas?: Array<string>, stmtTypes?: Array<string>, text?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<StatementModel>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.statementsListGet(beginTime, endTime, fields, resourceGroups, schemas, stmtTypes, text, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -4980,6 +5158,16 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          */
         async userLogin(message: UserAuthenticateForm, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserTokenResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.userLogin(message, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Reset encryption key to revoke all authorized codes
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async userRevokeSession(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.userRevokeSession(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -5441,12 +5629,30 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @summary Get all TiCDC instances
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTiCDCTopology(options?: any): AxiosPromise<Array<TopologyTiCDCInfo>> {
+            return localVarFp.getTiCDCTopology(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Get all TiDB instances
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         getTiDBTopology(options?: any): AxiosPromise<Array<TopologyTiDBInfo>> {
             return localVarFp.getTiDBTopology(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get all TiProxy instances
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTiProxyTopology(options?: any): AxiosPromise<Array<TopologyTiProxyInfo>> {
+            return localVarFp.getTiProxyTopology(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -5708,6 +5914,15 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.resourceManagerInformationGet(options).then((request) => request(axios, basePath));
         },
         /**
+         * 
+         * @summary List all resource groups
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        resourceManagerInformationGroupNamesGet(options?: any): AxiosPromise<Array<string>> {
+            return localVarFp.resourceManagerInformationGroupNamesGet(options).then((request) => request(axios, basePath));
+        },
+        /**
          * Get available field names by slowquery table columns
          * @summary Get available field names
          * @param {*} [options] Override http request option.
@@ -5760,12 +5975,13 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {number} [limit] 
          * @param {string} [orderBy] 
          * @param {Array<string>} [plans] for showing slow queries in the statement detail page
+         * @param {Array<string>} [resourceGroup] 
          * @param {string} [text] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        slowQueryListGet(beginTime?: number, db?: Array<string>, desc?: boolean, digest?: string, endTime?: number, fields?: string, limit?: number, orderBy?: string, plans?: Array<string>, text?: string, options?: any): AxiosPromise<Array<SlowqueryModel>> {
-            return localVarFp.slowQueryListGet(beginTime, db, desc, digest, endTime, fields, limit, orderBy, plans, text, options).then((request) => request(axios, basePath));
+        slowQueryListGet(beginTime?: number, db?: Array<string>, desc?: boolean, digest?: string, endTime?: number, fields?: string, limit?: number, orderBy?: string, plans?: Array<string>, resourceGroup?: Array<string>, text?: string, options?: any): AxiosPromise<Array<SlowqueryModel>> {
+            return localVarFp.slowQueryListGet(beginTime, db, desc, digest, endTime, fields, limit, orderBy, plans, resourceGroup, text, options).then((request) => request(axios, basePath));
         },
         /**
          * Start a profiling task group
@@ -5831,14 +6047,15 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {number} [beginTime] 
          * @param {number} [endTime] 
          * @param {string} [fields] 
+         * @param {Array<string>} [resourceGroups] 
          * @param {Array<string>} [schemas] 
          * @param {Array<string>} [stmtTypes] 
          * @param {string} [text] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        statementsListGet(beginTime?: number, endTime?: number, fields?: string, schemas?: Array<string>, stmtTypes?: Array<string>, text?: string, options?: any): AxiosPromise<Array<StatementModel>> {
-            return localVarFp.statementsListGet(beginTime, endTime, fields, schemas, stmtTypes, text, options).then((request) => request(axios, basePath));
+        statementsListGet(beginTime?: number, endTime?: number, fields?: string, resourceGroups?: Array<string>, schemas?: Array<string>, stmtTypes?: Array<string>, text?: string, options?: any): AxiosPromise<Array<StatementModel>> {
+            return localVarFp.statementsListGet(beginTime, endTime, fields, resourceGroups, schemas, stmtTypes, text, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -5991,6 +6208,15 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          */
         userLogin(message: UserAuthenticateForm, options?: any): AxiosPromise<UserTokenResponse> {
             return localVarFp.userLogin(message, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Reset encryption key to revoke all authorized codes
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        userRevokeSession(options?: any): AxiosPromise<void> {
+            return localVarFp.userRevokeSession(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -6843,6 +7069,13 @@ export interface DefaultApiSlowQueryListGetRequest {
 
     /**
      * 
+     * @type {Array<string>}
+     * @memberof DefaultApiSlowQueryListGet
+     */
+    readonly resourceGroup?: Array<string>
+
+    /**
+     * 
      * @type {string}
      * @memberof DefaultApiSlowQueryListGet
      */
@@ -6931,6 +7164,13 @@ export interface DefaultApiStatementsListGetRequest {
      * @memberof DefaultApiStatementsListGet
      */
     readonly fields?: string
+
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DefaultApiStatementsListGet
+     */
+    readonly resourceGroups?: Array<string>
 
     /**
      * 
@@ -7747,6 +7987,17 @@ export class DefaultApi extends BaseAPI {
 
     /**
      * 
+     * @summary Get all TiCDC instances
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public getTiCDCTopology(options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getTiCDCTopology(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
      * @summary Get all TiDB instances
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -7754,6 +8005,17 @@ export class DefaultApi extends BaseAPI {
      */
     public getTiDBTopology(options?: AxiosRequestConfig) {
         return DefaultApiFp(this.configuration).getTiDBTopology(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get all TiProxy instances
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public getTiProxyTopology(options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getTiProxyTopology(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -8060,6 +8322,17 @@ export class DefaultApi extends BaseAPI {
     }
 
     /**
+     * 
+     * @summary List all resource groups
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public resourceManagerInformationGroupNamesGet(options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).resourceManagerInformationGroupNamesGet(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * Get available field names by slowquery table columns
      * @summary Get available field names
      * @param {*} [options] Override http request option.
@@ -8115,7 +8388,7 @@ export class DefaultApi extends BaseAPI {
      * @memberof DefaultApi
      */
     public slowQueryListGet(requestParameters: DefaultApiSlowQueryListGetRequest = {}, options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).slowQueryListGet(requestParameters.beginTime, requestParameters.db, requestParameters.desc, requestParameters.digest, requestParameters.endTime, requestParameters.fields, requestParameters.limit, requestParameters.orderBy, requestParameters.plans, requestParameters.text, options).then((request) => request(this.axios, this.basePath));
+        return DefaultApiFp(this.configuration).slowQueryListGet(requestParameters.beginTime, requestParameters.db, requestParameters.desc, requestParameters.digest, requestParameters.endTime, requestParameters.fields, requestParameters.limit, requestParameters.orderBy, requestParameters.plans, requestParameters.resourceGroup, requestParameters.text, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -8197,7 +8470,7 @@ export class DefaultApi extends BaseAPI {
      * @memberof DefaultApi
      */
     public statementsListGet(requestParameters: DefaultApiStatementsListGetRequest = {}, options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).statementsListGet(requestParameters.beginTime, requestParameters.endTime, requestParameters.fields, requestParameters.schemas, requestParameters.stmtTypes, requestParameters.text, options).then((request) => request(this.axios, this.basePath));
+        return DefaultApiFp(this.configuration).statementsListGet(requestParameters.beginTime, requestParameters.endTime, requestParameters.fields, requestParameters.resourceGroups, requestParameters.schemas, requestParameters.stmtTypes, requestParameters.text, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -8363,6 +8636,17 @@ export class DefaultApi extends BaseAPI {
      */
     public userLogin(requestParameters: DefaultApiUserLoginRequest, options?: AxiosRequestConfig) {
         return DefaultApiFp(this.configuration).userLogin(requestParameters.message, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Reset encryption key to revoke all authorized codes
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public userRevokeSession(options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).userRevokeSession(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

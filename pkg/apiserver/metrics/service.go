@@ -1,4 +1,4 @@
-// Copyright 2023 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
 
 package metrics
 
@@ -12,6 +12,7 @@ import (
 	"go.uber.org/fx"
 	"golang.org/x/sync/singleflight"
 
+	"github.com/pingcap/tidb-dashboard/pkg/config"
 	"github.com/pingcap/tidb-dashboard/pkg/httpc"
 	"github.com/pingcap/tidb-dashboard/pkg/pd"
 )
@@ -29,6 +30,7 @@ const (
 
 type ServiceParams struct {
 	fx.In
+	Config     *config.Config
 	HTTPClient *httpc.Client
 	EtcdClient *clientv3.Client
 	PDClient   *pd.Client

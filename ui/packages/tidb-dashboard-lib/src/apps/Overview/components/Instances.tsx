@@ -38,6 +38,8 @@ function ComponentItem(props: {
     }
     return [up, all]
   }, [resp])
+  // query TiCDC and TiProxy components returns 404 under TiDB 7.6.0
+  const notFoundError = resp.error?.response?.status === 404
 
   return (
     <AnimatedSkeleton showSkeleton={resp.isLoading} paragraph={{ rows: 1 }}>
@@ -51,7 +53,7 @@ function ComponentItem(props: {
           </Descriptions.Item>
         </Descriptions>
       )}
-      {resp.error && (
+      {resp.error && !notFoundError && (
         <Typography.Text type="danger">
           <Space>
             <WarningOutlined /> Error
@@ -78,6 +80,8 @@ export default function Nodes() {
     data: storeResp.data?.tiflash
   }
   const pdResp = useClientRequest(ctx!.ds.getPDTopology)
+  const tiCDCResp = useClientRequest(ctx!.ds.getTiCDCTopology)
+  const tiProxyResp = useClientRequest(ctx!.ds.getTiProxyTopology)
 
   return (
     <Card
@@ -104,6 +108,14 @@ export default function Nodes() {
           </Col>
           <Col span={12}>
             <ComponentItem name={t('distro.tiflash')} resp={tiFlashResp} />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <ComponentItem name={t('distro.ticdc')} resp={tiCDCResp} />
+          </Col>
+          <Col span={12}>
+            <ComponentItem name={t('distro.tiproxy')} resp={tiProxyResp} />
           </Col>
         </Row>
       </Stack>

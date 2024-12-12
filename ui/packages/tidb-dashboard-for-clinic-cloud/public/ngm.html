@@ -167,6 +167,7 @@
           slowQuery: {
             enableExport: false,
             showDBFilter: false,
+            showDigestFilter: true,
             listApiReturnDetail: false, // so we can use the result returned by list api in the detail page, avoid request detail api
 
             orgName,
@@ -202,8 +203,17 @@
               customAbsoluteRangePicker: true
             },
             autoRefresh: false
+          },
+          conProf: {
+            checkNgm: false,
+            showSetting: false,
+            enableDownloadGroup: false,
+            enableDotGraph: false,
+            enablePreviewGoroutine: false,
+            listDuration: 1
           }
-        }
+        },
+        appsEnabled: ['topsql', 'slow_query', 'conprof', 'sql_advisor']
       })
     </script>
   </body>

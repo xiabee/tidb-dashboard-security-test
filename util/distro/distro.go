@@ -1,4 +1,4 @@
-// Copyright 2023 PingCAP, Inc. Licensed under Apache-2.0.
+// Copyright 2024 PingCAP, Inc. Licensed under Apache-2.0.
 
 // Package distro provides a type-safe distribution resource framework.
 // Distribution resource determines how component names are displayed in errors, logs and so on.
@@ -23,6 +23,7 @@ type DistributionResource struct {
 	PD       string `json:"pd,omitempty"`
 	TiFlash  string `json:"tiflash,omitempty"`
 	TiCDC    string `json:"ticdc,omitempty"`
+	TiProxy  string `json:"tiproxy,omitempty"`
 }
 
 var defaultDistroRes = DistributionResource{
@@ -32,6 +33,7 @@ var defaultDistroRes = DistributionResource{
 	PD:       "PD",
 	TiFlash:  "TiFlash",
 	TiCDC:    "TiCDC",
+	TiProxy:  "TiProxy",
 }
 
 var (

@@ -2287,6 +2287,33 @@
                 }
             }
         },
+        "/resource_manager/information/group_names": {
+            "get": {
+                "security": [
+                    {
+                        "JwtAuth": []
+                    }
+                ],
+                "summary": "List all resource groups",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/rest.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/slow_query/available_fields": {
             "get": {
                 "security": [
@@ -2503,6 +2530,15 @@
                         "in": "query"
                     },
                     {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi",
+                        "name": "resource_group",
+                        "in": "query"
+                    },
+                    {
                         "type": "string",
                         "name": "text",
                         "in": "query"
@@ -2715,6 +2751,15 @@
                     {
                         "type": "string",
                         "name": "fields",
+                        "in": "query"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "multi",
+                        "name": "resource_groups",
                         "in": "query"
                     },
                     {
@@ -3168,6 +3213,34 @@
                 }
             }
         },
+        "/topology/ticdc": {
+            "get": {
+                "security": [
+                    {
+                        "JwtAuth": []
+                    }
+                ],
+                "summary": "Get all TiCDC instances",
+                "operationId": "getTiCDCTopology",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/topology.TiCDCInfo"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/rest.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/topology/tidb": {
             "get": {
                 "security": [
@@ -3216,6 +3289,34 @@
                 "responses": {
                     "200": {
                         "description": "delete ok"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/rest.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/topology/tiproxy": {
+            "get": {
+                "security": [
+                    {
+                        "JwtAuth": []
+                    }
+                ],
+                "summary": "Get all TiProxy instances",
+                "operationId": "getTiProxyTopology",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/topology.TiProxyInfo"
+                            }
+                        }
                     },
                     "401": {
                         "description": "Unauthorized",
@@ -3470,6 +3571,22 @@
                         "schema": {
                             "$ref": "#/definitions/code.ShareResponse"
                         }
+                    }
+                }
+            }
+        },
+        "/user/share/revoke": {
+            "post": {
+                "security": [
+                    {
+                        "JwtAuth": []
+                    }
+                ],
+                "summary": "Reset encryption key to revoke all authorized codes",
+                "operationId": "userRevokeSession",
+                "responses": {
+                    "200": {
+                        "description": ""
                     }
                 }
             }
@@ -4663,6 +4780,9 @@
                 "num_pd_nodes": {
                     "type": "integer"
                 },
+                "num_ticdc_nodes": {
+                    "type": "integer"
+                },
                 "num_tidb_nodes": {
                     "type": "integer"
                 },
@@ -4670,6 +4790,9 @@
                     "type": "integer"
                 },
                 "num_tikv_nodes": {
+                    "type": "integer"
+                },
+                "num_tiproxy_nodes": {
                     "type": "integer"
                 }
             }
@@ -4898,6 +5021,12 @@
                         "type": "string"
                     }
                 },
+                "resource_group": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "text": {
                     "type": "string"
                 }
@@ -5053,6 +5182,9 @@
                 "resolve_lock_time": {
                     "type": "number"
                 },
+                "resource_group": {
+                    "type": "string"
+                },
                 "rewrite_time": {
                     "type": "number"
                 },
@@ -5072,11 +5204,18 @@
                 "rocksdb_key_skipped_count": {
                     "type": "integer"
                 },
+                "ru": {
+                    "description": "Resource Control",
+                    "type": "number"
+                },
                 "stats": {
                     "type": "string"
                 },
                 "success": {
                     "type": "integer"
+                },
+                "time_queued_by_rc": {
+                    "type": "number"
                 },
                 "timestamp": {
                     "description": "finish time",
@@ -5216,6 +5355,12 @@
                 "fields": {
                     "type": "string"
                 },
+                "resource_groups": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "schemas": {
                     "type": "array",
                     "items": {
@@ -5308,6 +5453,12 @@
                 },
                 "avg_rocksdb_key_skipped_count": {
                     "type": "integer"
+                },
+                "avg_ru": {
+                    "type": "number"
+                },
+                "avg_time_queued_by_rc": {
+                    "type": "number"
                 },
                 "avg_total_keys": {
                     "type": "integer"
@@ -5423,6 +5574,12 @@
                 "max_rocksdb_key_skipped_count": {
                     "type": "integer"
                 },
+                "max_ru": {
+                    "type": "number"
+                },
+                "max_time_queued_by_rc": {
+                    "type": "number"
+                },
                 "max_total_keys": {
                     "type": "integer"
                 },
@@ -5471,6 +5628,10 @@
                     "description": "Computed fields",
                     "type": "string"
                 },
+                "resource_group": {
+                    "description": "Resource Control",
+                    "type": "string"
+                },
                 "sample_user": {
                     "type": "string"
                 },
@@ -5491,6 +5652,9 @@
                 },
                 "sum_latency": {
                     "type": "integer"
+                },
+                "sum_ru": {
+                    "type": "number"
                 },
                 "sum_warnings": {
                     "type": "integer"
@@ -5621,7 +5785,68 @@
                 }
             }
         },
+        "topology.TiCDCInfo": {
+            "type": "object",
+            "properties": {
+                "cluster_name": {
+                    "type": "string"
+                },
+                "deploy_path": {
+                    "type": "string"
+                },
+                "git_hash": {
+                    "type": "string"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
+                "start_timestamp": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "status_port": {
+                    "type": "integer"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        },
         "topology.TiDBInfo": {
+            "type": "object",
+            "properties": {
+                "deploy_path": {
+                    "type": "string"
+                },
+                "git_hash": {
+                    "type": "string"
+                },
+                "ip": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "integer"
+                },
+                "start_timestamp": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "status_port": {
+                    "type": "integer"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        },
+        "topology.TiProxyInfo": {
             "type": "object",
             "properties": {
                 "deploy_path": {
